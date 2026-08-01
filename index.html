@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Friendship Day 2026, Himuu ❤️</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0712;
+            --card-bg: rgba(23, 15, 38, 0.55);
+            --card-border: rgba(255, 105, 180, 0.2);
+            --primary-rose: #ff3b7d;
+            --accent-purple: #9d4edd;
+            --accent-gold: #ffd166;
+            --text-main: #f8f9fa;
+            --text-sub: #c8b6e2;
+            --glow-rose: 0 0 25px rgba(255, 59, 125, 0.5);
+            --glow-purple: 0 0 25px rgba(157, 78, 221, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas Particle Background */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Ambient Sound Button */
+        .audio-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .audio-control:hover {
+            background: var(--primary-rose);
+            box-shadow: var(--glow-rose);
+            transform: translateY(-2px);
+        }
+
+        /* Container & Grid */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 40px 20px;
+        }
+
+        .badge {
+            background: rgba(255, 59, 125, 0.15);
+            border: 1px solid var(--primary-rose);
+            color: #ff85a1;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.8rem, 8vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff 0%, #ff75a0 50%, #9d4edd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: zoomIn 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-subtitle {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--accent-gold);
+            margin-bottom: 25px;
+            animation: fadeInUp 1.4s ease;
+        }
+
+        .hero-description {
+            max-width: 600px;
+            color: var(--text-sub);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            animation: fadeInUp 1.6s ease;
+        }
+
+        .btn-glow {
+            background: linear-gradient(135deg, var(--primary-rose), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--glow-rose);
+        }
+
+        .btn-glow:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 0 35px rgba(255, 59, 125, 0.8);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 80px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.3rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--text-sub);
+            font-size: 1rem;
+        }
+
+        /* Interactive Flip Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            height: 240px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner, .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .flip-card-front {
+            color: white;
+        }
+
+        .flip-card-front .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px var(--primary-rose));
+        }
+
+        .flip-card-front h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+        }
+
+        .flip-card-front span {
+            font-size: 0.8rem;
+            color: var(--accent-gold);
+            margin-top: 8px;
+        }
+
+        .flip-card-back {
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(255, 59, 125, 0.2));
+            border: 1px solid var(--primary-rose);
+            transform: rotateY(180deg);
+            color: #fff;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        /* Surprise Letter Container */
+        .envelope-wrapper {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transition: all 0.5s ease;
+        }
+
+        .envelope-wrapper:hover {
+            border-color: rgba(255, 59, 125, 0.5);
+            box-shadow: var(--glow-purple);
+        }
+
+        .envelope-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope-icon:hover {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .letter-content {
+            display: none;
+            text-align: left;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1s ease;
+        }
+
+        .letter-content p {
+            font-size: 1.05rem;
+            color: #e2d9f3;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .letter-signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            color: var(--accent-gold);
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        /* Wish / Compliment Tap Section */
+        .compliment-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px dashed var(--accent-purple);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .compliment-display {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #fff;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-rose);
+            color: var(--primary-rose);
+            padding: 12px 28px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-rose);
+            color: white;
+            box-shadow: var(--glow-rose);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 60px;
+        }
+
+        .heart-beat {
+            display: inline-block;
+            color: var(--primary-rose);
+            animation: heartBeat 1.2s infinite;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 600px) {
+            .cards-grid { grid-template-columns: 1fr; }
+            .envelope-wrapper { padding: 25px 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Ambient Sound Synthesizer Toggle -->
+    <button class="audio-control" id="audioToggle">
+        <span id="audioIcon">🎵</span>
+        <span id="audioText">Play Calm Vibe</span>
+    </button>
+
+    <div class="container">
+        
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="badge">✨ Happy Friendship Day 2026 ✨</div>
+            <h1 class="hero-title">Himali</h1>
+            <div class="hero-subtitle">My Dearest Himuu ❤️</div>
+            <p class="hero-description">
+                In a universe of billions, having you as my favorite person makes everything brighter, warmer, and endlessly special. Here is a digital universe created just for you.
+            </p>
+            <a href="#reasons" class="btn-glow">
+                Explore Our Magic ✨
+            </a>
+        </header>
+
+        <!-- Reason Cards Section -->
+        <section id="reasons">
+            <div class="section-header">
+                <h2>Why You Mean The World</h2>
+                <p>Tap each card to reveal a secret note written for you!</p>
+            </div>
+
+            <div class="cards-grid">
+                <!-- Card 1 -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="icon">✨</div>
+                            <h3>Pure Sunshine</h3>
+                            <span>[ Tap to Flip ]</span>
+                        </div>
+                        <div class="flip-card-back">
+                            Your laugh is literally my favorite sound in the world, Himuu. You bring so much light into my life without even trying!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="icon">🛡️</div>
+                            <h3>My Safe Haven</h3>
+                            <span>[ Tap to Flip ]</span>
+                        </div>
+                        <div class="flip-card-back">
+                            With you, I can be 100% myself. Thank you for listening, understanding, and holding my secrets like gold, Himali.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="icon">🌙</div>
+                            <h3>Late Night Talks</h3>
+                            <span>[ Tap to Flip ]</span>
+                        </div>
+                        <div class="flip-card-back">
+                            From deep conversations to nonsensical inside jokes, every minute spent talking with you is a core memory I treasure.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="icon">💫</div>
+                            <h3>Unmatched Vibe</h3>
+                            <span>[ Tap to Flip ]</span>
+                        </div>
+                        <div class="flip-card-back">
+                            No matter where life takes us in 2026 and beyond, you will always be my number one. Forever and always, Himuu!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Compliment Jar -->
+        <section id="compliments">
+            <div class="section-header">
+                <h2>The Compliment Generator</h2>
+                <p>Need a little smile? Tap the button below!</p>
+            </div>
+
+            <div class="compliment-box">
+                <div class="compliment-display" id="complimentText">
+                    "Click below to generate a reason why Himuu is irreplaceable! 💖"
+                </div>
+                <button class="btn-outline" onclick="generateCompliment()">
+                    Tap for Magic ✨
+                </button>
+            </div>
+        </section>
+
+        <!-- Virtual Surprise Letter -->
+        <section id="letter">
+            <div class="section-header">
+                <h2>A Special Envelope for Himuu</h2>
+                <p>Click the letter below to unseal your Friendship Day Message!</p>
+            </div>
+
+            <div class="envelope-wrapper">
+                <div class="envelope-icon" id="envelopeBtn" onclick="openLetter()">💌</div>
+                <h3 id="letterStatus" style="color: var(--accent-gold);">Click the envelope to open...</h3>
+
+                <div class="letter-content" id="letterBody">
+                    <p>Dear Himali (Himuu ❤️),</p>
+                    <p>
+                        Happy Friendship Day 2026! I wanted to create something truly unique for you because standard words on a screen could never be enough to capture how much your presence enriches my life.
+                    </p>
+                    <p>
+                        Whether we are sharing continuous laughs, supporting each other through tough days, or just being effortlessly comfortable together, every single moment with you is precious. Your kindness, your sweet chaotic energy, and your heart make you one of the most beautiful souls I have ever met.
+                    </p>
+                    <p>
+                        Thank you for being my constant, my confidante, and my favorite person. May 2026 bring you infinite joy, prosperity, and endless reasons to smile.
+                    </p>
+                    <div class="letter-signature">
+                        Always Yours, <br>
+                        With lots of love ❤️
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        Crafted with <span class="heart-beat">❤️</span> specially for <strong>Himali (Himuu)</strong> • Friendship Day 2026
+    </footer>
+
+    <!-- Canvas Confetti & Particle Script -->
+    <script>
+        /* --- Particle Canvas Effect --- */
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.color = `rgba(${150 + Math.random()*105}, ${50 + Math.random()*100}, 220, ${Math.random()*0.6 + 0.2})`;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.min(window.innerWidth / 10, 80);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        /* --- Scroll Animation Observer --- */
+        const sections = document.querySelectorAll('section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        sections.forEach(sec => observer.observe(sec));
+
+        /* --- Compliment Generator --- */
+        const compliments = [
+            "Himuu, your laughter is contagious and lights up every room! ✨",
+            "Himali, you possess a heart of gold that inspires everyone around you. 💛",
+            "Life is 100x more fun whenever you are in it, Himuu! 🎉",
+            "You are genuinely one of a kind—never change who you are! 🌟",
+            "Having Himuu in my life is the biggest flex ever! 💖",
+            "Your kindness, elegance, and sweetness are legendary, Himali! 🌸"
+        ];
+
+        function generateCompliment() {
+            const display = document.getElementById('complimentText');
+            display.style.opacity = '0';
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * compliments.length);
+                display.innerText = compliments[randomIndex];
+                display.style.opacity = '1';
+            }, 200);
+        }
+
+        /* --- Envelope Reveal + Confetti Explosion --- */
+        let isOpened = false;
+        function openLetter() {
+            if (isOpened) return;
+            isOpened = true;
+
+            const letterBody = document.getElementById('letterBody');
+            const letterStatus = document.getElementById('letterStatus');
+            const envelopeIcon = document.getElementById('envelopeBtn');
+
+            envelopeIcon.innerText = "💖";
+            letterStatus.innerText = "Opened for Himuu ❤️";
+            letterBody.style.display = "block";
+
+            triggerConfetti();
+        }
+
+        function triggerConfetti() {
+            const colors = ['#ff3b7d', '#9d4edd', '#ffd166', '#ffffff'];
+            for (let i = 0; i < 70; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.top = '-10px';
+                conf.style.width = Math.random() * 10 + 5 + 'px';
+                conf.style.height = Math.random() * 10 + 5 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.borderRadius = '50%';
+                conf.style.zIndex = '1000';
+                conf.style.pointerEvents = 'none';
+                conf.style.opacity = Math.random() + 0.5;
+                document.body.appendChild(conf);
+
+                const duration = Math.random() * 3000 + 2000;
+                const fall = conf.animate([
+                    { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translateY(100vh) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                ], {
+                    duration: duration,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                });
+
+                fall.onfinish = () => conf.remove();
+            }
+        }
+
+        /* --- Ambient Web Audio Synthesizer (No external links required) --- */
+        let audioCtx = null;
+        let isPlaying = false;
+        let oscillator = null;
+        let gainNode = null;
+
+        const audioBtn = document.getElementById('audioToggle');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioText = document.getElementById('audioText');
+
+        audioBtn.addEventListener('click', () => {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (!isPlaying) {
+                // Play relaxing ambient chord pad tone
+                oscillator = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(220, audioCtx.currentTime); // A3 note
+
+                gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 2);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                oscillator.start();
+                isPlaying = true;
+                audioIcon.innerText = "🔊";
+                audioText.innerText = "Playing Calm Vibe";
+                audioBtn.style.background = "var(--primary-rose)";
+            } else {
+                // Fade out sound
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1);
+                setTimeout(() => {
+                    if (oscillator) oscillator.stop();
+                    isPlaying = false;
+                }, 1000);
+
+                audioIcon.innerText = "🎵";
+                audioText.innerText = "Play Calm Vibe";
+                audioBtn.style.background = "rgba(255, 255, 255, 0.08)";
+            }
+        });
+    </script>
+</body>
+</html>
